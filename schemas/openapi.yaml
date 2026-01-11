@@ -1,0 +1,545 @@
+openapi: 3.0.3
+info:
+  title: Bose SoundTouch Web API
+  version: 1.0.0
+  description: |
+    REST API for controlling Bose SoundTouch speakers over HTTP.
+
+    The SoundTouch Web API provides control over Compatible Bose Products including:
+    - Playback control (play, pause, stop, skip)
+    - Volume and audio settings
+    - Source selection (Bluetooth, AUX, streaming services)
+    - Preset management
+    - Multi-room zone configuration
+    - Real-time notifications via WebSocket
+
+    **Base URL:** `http://{device-ip}:8090`
+
+    **WebSocket:** `ws://{device-ip}:8080` (protocol: "gabbo")
+
+  contact:
+    name: Bose Corporation
+    url: https://www.bose.com
+  license:
+    name: Bose SoundTouch Web API Terms of Use
+    url: https://assets.bosecreative.com/transform/1922c5c8-2852-4f57-8101-4fc6cd93b150/SoundTouch-Web-API
+
+servers:
+  - url: http://{deviceIp}:8090
+    description: SoundTouch Device
+    variables:
+      deviceIp:
+        default: 192.168.1.100
+        description: IP address of the SoundTouch device
+
+tags:
+  - name: Playback Control
+    description: Control playback and select sources
+  - name: Audio Settings
+    description: Volume, bass, and audio mode settings
+  - name: Now Playing
+    description: Currently playing media information
+  - name: Presets
+    description: Preset management
+  - name: Multi-Room Zones
+    description: Multi-room audio zone configuration
+  - name: Device Information
+    description: Device info and capabilities
+
+paths:
+  /key:
+    post:
+      tags:
+        - Playback Control
+      summary: Send remote button press
+      description: |
+        Simulates pressing a button on the remote control. Send two separate POST
+        requests (press and release) to fully simulate a button click.
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              xml:
+                name: key
+              example: '<key state="press" sender="MyApp">PLAY_PAUSE</key>'
+            examples:
+              play:
+                summary: Play button press
+                value: '<key state="press" sender="MyApp">PLAY</key>'
+              volumeUp:
+                summary: Volume up button press
+                value: '<key state="press" sender="MyApp">VOLUME_UP</key>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /select:
+    post:
+      tags:
+        - Playback Control
+      summary: Select audio source
+      description: Switch to a specific audio source (Bluetooth, AUX, streaming service, etc.)
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              xml:
+                name: ContentItem
+            examples:
+              bluetooth:
+                summary: Select Bluetooth
+                value: '<ContentItem source="BLUETOOTH"></ContentItem>'
+              aux:
+                summary: Select AUX input
+                value: '<ContentItem source="AUX" sourceAccount="AUX"></ContentItem>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /sources:
+    get:
+      tags:
+        - Playback Control
+      summary: List available sources
+      description: Retrieves a list of all available audio sources for the device
+      responses:
+        '200':
+          description: List of sources
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SourcesResponse'
+
+  /volume:
+    get:
+      tags:
+        - Audio Settings
+      summary: Get current volume
+      description: Retrieves current volume level (0-100) and mute state
+      responses:
+        '200':
+          description: Current volume
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/VolumeResponse'
+    post:
+      tags:
+        - Audio Settings
+      summary: Set volume
+      description: Set volume level (0-100) and/or mute state
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              xml:
+                name: volume
+            examples:
+              setVolume:
+                summary: Set volume to 30
+                value: '<volume>30</volume>'
+              volumeAndMute:
+                summary: Set volume and unmute
+                value: '<volume>50<muteenabled>false</muteenabled></volume>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /bass:
+    get:
+      tags:
+        - Audio Settings
+      summary: Get bass level
+      description: Retrieves current bass level
+      responses:
+        '200':
+          description: Current bass level
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BassResponse'
+    post:
+      tags:
+        - Audio Settings
+      summary: Set bass level
+      description: Adjust bass level (check /bassCapabilities for valid range)
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              xml:
+                name: bass
+              example: '<bass>0</bass>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /bassCapabilities:
+    get:
+      tags:
+        - Audio Settings
+      summary: Get bass capabilities
+      description: Check if device supports bass adjustment and get valid range
+      responses:
+        '200':
+          description: Bass capabilities
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/BassCapabilitiesResponse'
+
+  /audiodspcontrols:
+    get:
+      tags:
+        - Audio Settings
+      summary: Get DSP audio mode
+      description: Get current DSP settings (soundbars/home theater only)
+      responses:
+        '200':
+          description: DSP controls
+          content:
+            application/xml:
+              schema:
+                type: string
+                example: '<audiodspcontrols audiomode="AUDIO_MODE_NORMAL" videosyncaudiodelay="0" supportedaudiomodes="AUDIO_MODE_NORMAL|AUDIO_MODE_DIALOG"/>'
+    post:
+      tags:
+        - Audio Settings
+      summary: Set DSP audio mode
+      description: Set DSP audio mode (only if supported)
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              example: '<audiodspcontrols audiomode="AUDIO_MODE_DIALOG"/>'
+      responses:
+        '200':
+          description: Success
+
+  /now_playing:
+    get:
+      tags:
+        - Now Playing
+      summary: Get now playing information
+      description: Retrieves complete information about currently playing content
+      responses:
+        '200':
+          description: Now playing information
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/NowPlayingResponse'
+
+  /trackInfo:
+    get:
+      tags:
+        - Now Playing
+      summary: Get track information
+      description: Returns track information (same as /now_playing)
+      responses:
+        '200':
+          description: Track information
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/NowPlayingResponse'
+
+  /presets:
+    get:
+      tags:
+        - Presets
+      summary: Get presets
+      description: Retrieves all configured presets (1-6)
+      responses:
+        '200':
+          description: List of presets
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/PresetsResponse'
+
+  /getZone:
+    get:
+      tags:
+        - Multi-Room Zones
+      summary: Get zone configuration
+      description: Returns current multi-room zone membership
+      responses:
+        '200':
+          description: Zone configuration
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ZoneResponse'
+
+  /setZone:
+    post:
+      tags:
+        - Multi-Room Zones
+      summary: Create multi-room zone
+      description: Creates a new multi-room zone with specified members
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              example: |
+                <zone master="AABBCCDDEEFF" senderIPAddress="192.168.1.50">
+                  <member ipaddress="192.168.1.100">AABBCCDDEEFF</member>
+                  <member ipaddress="192.168.1.101">112233445566</member>
+                </zone>
+      responses:
+        '200':
+          description: Success
+
+  /addZoneSlave:
+    post:
+      tags:
+        - Multi-Room Zones
+      summary: Add device to zone
+      description: Adds one or more devices to existing zone
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              example: |
+                <zone master="AABBCCDDEEFF">
+                  <member ipaddress="192.168.1.102">FFEEDDCCBBAA</member>
+                </zone>
+      responses:
+        '200':
+          description: Success
+
+  /removeZoneSlave:
+    post:
+      tags:
+        - Multi-Room Zones
+      summary: Remove device from zone
+      description: Removes one or more devices from zone
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              example: |
+                <zone master="AABBCCDDEEFF">
+                  <member ipaddress="192.168.1.102">FFEEDDCCBBAA</member>
+                </zone>
+      responses:
+        '200':
+          description: Success
+
+  /info:
+    get:
+      tags:
+        - Device Information
+      summary: Get device information
+      description: Retrieves static device information including type, software version, network info
+      responses:
+        '200':
+          description: Device information
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/InfoResponse'
+
+  /name:
+    post:
+      tags:
+        - Device Information
+      summary: Set device name
+      description: Changes the friendly name of the device
+      requestBody:
+        required: true
+        content:
+          application/xml:
+            schema:
+              type: string
+              xml:
+                name: name
+              example: '<name>Living Room Speaker</name>'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+
+  /capabilities:
+    get:
+      tags:
+        - Device Information
+      summary: Get device capabilities
+      description: Retrieves list of optional capabilities/URLs supported by device
+      responses:
+        '200':
+          description: Device capabilities
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/CapabilitiesResponse'
+
+components:
+  schemas:
+    StatusResponse:
+      type: object
+      xml:
+        name: status
+      example: '<status>OK</status>'
+
+    ErrorResponse:
+      type: object
+      xml:
+        name: errors
+      example: |
+        <errors deviceID="AABBCCDDEEFF">
+          <error value="1019" name="CLIENT_XML_ERROR" severity="Unknown">1019</error>
+        </errors>
+
+    VolumeResponse:
+      type: object
+      xml:
+        name: volume
+      example: |
+        <volume deviceID="AABBCCDDEEFF">
+          <targetvolume>30</targetvolume>
+          <actualvolume>30</actualvolume>
+          <muteenabled>false</muteenabled>
+        </volume>
+
+    BassResponse:
+      type: object
+      xml:
+        name: bass
+      example: |
+        <bass deviceID="AABBCCDDEEFF">
+          <targetbass>0</targetbass>
+          <actualbass>0</actualbass>
+        </bass>
+
+    BassCapabilitiesResponse:
+      type: object
+      xml:
+        name: bassCapabilities
+      example: |
+        <bassCapabilities deviceID="AABBCCDDEEFF">
+          <bassAvailable>true</bassAvailable>
+          <bassMin>-9</bassMin>
+          <bassMax>0</bassMax>
+          <bassDefault>0</bassDefault>
+        </bassCapabilities>
+
+    SourcesResponse:
+      type: object
+      xml:
+        name: sources
+      example: |
+        <sources deviceID="AABBCCDDEEFF">
+          <sourceItem source="BLUETOOTH" status="READY">Bluetooth</sourceItem>
+          <sourceItem source="AUX" sourceAccount="AUX" status="READY">AUX</sourceItem>
+          <sourceItem source="SPOTIFY" status="READY">Spotify</sourceItem>
+        </sources>
+
+    NowPlayingResponse:
+      type: object
+      xml:
+        name: nowPlaying
+      example: |
+        <nowPlaying deviceID="AABBCCDDEEFF" source="SPOTIFY">
+          <ContentItem source="SPOTIFY" location="spotify:track:abc123"
+                       sourceAccount="user@example.com" isPresetable="true">
+            <itemName>Song Title</itemName>
+          </ContentItem>
+          <track>Song Title</track>
+          <artist>Artist Name</artist>
+          <album>Album Name</album>
+          <art artImageStatus="IMAGE_PRESENT">http://example.com/cover.jpg</art>
+          <playStatus>PLAY_STATE</playStatus>
+        </nowPlaying>
+
+    PresetsResponse:
+      type: object
+      xml:
+        name: presets
+      example: |
+        <presets>
+          <preset id="1" createdOn="1704672000000" updatedOn="1704672000000">
+            <ContentItem source="PANDORA" location="R123456"
+                         sourceAccount="user@example.com" isPresetable="true">
+              <itemName>Today's Hits</itemName>
+            </ContentItem>
+          </preset>
+        </presets>
+
+    ZoneResponse:
+      type: object
+      xml:
+        name: zone
+      example: |
+        <zone master="AABBCCDDEEFF">
+          <member ipaddress="192.168.1.100">AABBCCDDEEFF</member>
+          <member ipaddress="192.168.1.101">112233445566</member>
+        </zone>
+
+    InfoResponse:
+      type: object
+      xml:
+        name: info
+      example: |
+        <info deviceID="AABBCCDDEEFF">
+          <name>Living Room</name>
+          <type>SoundTouch 20</type>
+          <margeAccountUUID>user@example.com</margeAccountUUID>
+          <components>
+            <component>
+              <componentCategory>SCM</componentCategory>
+              <softwareVersion>22.0.0.15571</softwareVersion>
+              <serialNumber>066534P23110294AE</serialNumber>
+            </component>
+          </components>
+          <networkInfo type="SMSC">
+            <macAddress>AABBCCDDEEFF</macAddress>
+            <ipAddress>192.168.1.100</ipAddress>
+          </networkInfo>
+        </info>
+
+    CapabilitiesResponse:
+      type: object
+      xml:
+        name: capabilities
+      example: |
+        <capabilities deviceID="AABBCCDDEEFF">
+          <capability name="audiodspcontrols" url="/audiodspcontrols"/>
+          <capability name="audioproducttonecontrols" url="/audioproducttonecontrols"/>
+        </capabilities>
