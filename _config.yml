@@ -7,11 +7,14 @@ url: "https://jaas666.github.io"
 # Theme
 remote_theme: just-the-docs/just-the-docs@v0.10.0
 
+# Plugins
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
 # Color scheme
 color_scheme: dark
-
-# Logo
-logo: "/assets/images/logo.png"
 
 # Search
 search_enabled: true
