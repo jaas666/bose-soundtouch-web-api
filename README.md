@@ -2,6 +2,38 @@
 
 **Version 1.0** | **Effective January 7, 2026**
 
+> **⚠️ DISCLAIMER**: This is an **unofficial** community repository. While the documentation is sourced from official Bose materials ([SoundTouch-Web-API.pdf](soundtouch-api.pdf)), this repository is **NOT** officially maintained, endorsed, or sponsored by Bose Corporation.
+>
+> **📝 Note**: This documentation was converted from PDF to Markdown using Claude Code. Code examples are provided for reference and **have not been tested**. Use at your own risk and please test thoroughly before deploying in production.
+>
+> **🤝 Contributions Welcome**: This is a community effort! If you find errors, have improvements, or want to add tested examples, please contribute via issues or pull requests.
+
+## Why This Repository Exists
+
+On **May 6, 2026**, Bose is ending cloud support for SoundTouch products. While Bose has graciously released a local-only app and published the Web API documentation, this community repository aims to preserve and make this critical documentation more accessible for developers.
+
+### What's Changing (May 6, 2026)
+
+**❌ Stopping:**
+- Cloud-based music service browsing in the SoundTouch app
+- Cloud-dependent multi-room features
+- Remote access from outside your network
+
+**✅ Still Working:**
+- **Local network control** via the updated SoundTouch app
+- **Web API** for custom integrations (this documentation!)
+- **AirPlay** and **Spotify Connect**
+- **Bluetooth** connectivity
+- Basic playback, volume, and source control
+
+### The Silver Lining
+
+By releasing this Web API documentation, Bose has enabled the community to build custom control solutions that will work indefinitely on your local network. This repository makes that documentation easier to discover, search, and implement.
+
+**Official Announcement:** [Bose SoundTouch End of Life](https://www.bose.com/soundtouch-end-of-life)
+
+---
+
 This repository contains the complete documentation for the Bose SoundTouch Web API, which enables developers to create applications that control and interact with Bose SoundTouch speakers.
 
 ## Overview
@@ -97,9 +129,50 @@ Any internet or Bluetooth connected consumer electronic product manufactured by 
 |---------|--------------|-------|
 | 1.0.0   | January 7, 2026 | Initial Release |
 
+## Original Source
+
+This documentation was converted from the official [Bose SoundTouch Web API PDF](soundtouch-api.pdf) (Version 1.0, effective January 7, 2026).
+
+**Original Source**: https://assets.bosecreative.com/m/496577402d128874/original/SoundTouch-Web-API.pdf
+
 ## Contributing
 
-This is official documentation from Bose Corporation. For issues or corrections, please open an issue in this repository.
+**We welcome contributions!** This is a community-maintained repository and your help is appreciated.
+
+### How to Contribute
+
+- **🐛 Found an error?** Open an issue describing the problem
+- **✅ Tested the code?** Share your results and improvements
+- **📚 Better examples?** Submit working code examples in your favorite language
+- **🌍 Translations?** Help translate the docs to other languages
+- **📖 Improvements?** Better explanations, diagrams, or formatting
+
+### Contribution Guidelines
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-improvement`)
+3. Make your changes
+4. Test thoroughly (especially code examples!)
+5. Commit with clear messages
+6. Open a pull request
+
+**Note**: Since the original documentation is from Bose Corporation, maintain accuracy to the official specification. Add clarifications and examples, but don't alter the core API documentation.
+
+## Additional Resources
+
+### Official Bose Information
+- **[SoundTouch End of Life Announcement](https://www.bose.com/soundtouch-end-of-life)** - Official details from Bose
+- **[Trade-In Program](https://www.bose.com/soundtouch-end-of-life)** - Up to $200 credit toward new Bose systems
+
+### Community & News Coverage
+- **[Bose SoundTouch End of Life Gets Less Painful With Public API Release](https://itsfoss.com/news/bose-soundtouch-api/)** - It's FOSS coverage
+- **[Bose is ending SoundTouch's cloud features, but not entirely killing the speakers](https://www.techspot.com/news/110844-bose-ending-soundtouch-cloud-features-but-not-entirely.html)** - TechSpot article
+- **[Bose Sets New Standard for End-of-Life Hardware: Open-Sourcing SoundTouch API](https://techplanet.today/post/bose-sets-new-standard-for-end-of-life-hardware-open-sourcing-soundtouch-api)** - TechPlanet coverage
+- **[AVS Forum Discussion](https://www.avsforum.com/threads/bose-soundtouch-owners-left-hanging-%E2%80%94-cloud-shutdown-2026.3334275/)** - User community discussion
+
+### Alternative Apps & Integrations
+- **[SoundTouch App Alternatives](https://bose.fandom.com/wiki/SoundTouch_app_alternatives)** - Community wiki
+- Consider building your own using this API documentation!
 
 ## Trademarks
 
