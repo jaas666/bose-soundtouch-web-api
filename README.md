@@ -2,8 +2,6 @@
 
 **Version 1.0** | **Effective January 7, 2026**
 
-📖 **[View Live Documentation Site](https://jaas666.github.io/bose-soundtouch/)**
-
 > **⚠️ DISCLAIMER**: This is an **unofficial** community repository. While the documentation is sourced from official Bose materials ([SoundTouch-Web-API.pdf](soundtouch-api.pdf)), this repository is **NOT** officially maintained, endorsed, or sponsored by Bose Corporation.
 >
 > **📝 Note**: This documentation was converted from PDF to Markdown using Claude Code. Code examples are provided for reference and **have not been tested**. Use at your own risk and please test thoroughly before deploying in production.
