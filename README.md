@@ -93,7 +93,7 @@ socket.onmessage = (event) => {
 
 ## Documentation
 
-- **[Getting Started Guide](docs/getting-started.md)** - Setup and basic concepts
+- **[Getting Started Guide](/getting-started)** - Setup and basic concepts
 - **[API Reference](docs/api-reference/)** - Complete endpoint documentation
   - [Endpoints](docs/api-reference/endpoints.md)
   - [Data Types](docs/api-reference/data-types.md)
