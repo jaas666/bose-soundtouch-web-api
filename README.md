@@ -2,6 +2,12 @@
 
 **Version 1.0** | **Effective January 7, 2026**
 
+> **⚠️ DISCLAIMER**: This is an **unofficial** community repository. While the documentation is sourced from official Bose materials ([SoundTouch-Web-API.pdf](soundtouch-api.pdf)), this repository is **NOT** officially maintained, endorsed, or sponsored by Bose Corporation.
+>
+> **📝 Note**: This documentation was converted from PDF to Markdown using Claude Code. Code examples are provided for reference and **have not been tested**. Use at your own risk and please test thoroughly before deploying in production.
+>
+> **🤝 Contributions Welcome**: This is a community effort! If you find errors, have improvements, or want to add tested examples, please contribute via issues or pull requests.
+
 This repository contains the complete documentation for the Bose SoundTouch Web API, which enables developers to create applications that control and interact with Bose SoundTouch speakers.
 
 ## Overview
@@ -97,9 +103,34 @@ Any internet or Bluetooth connected consumer electronic product manufactured by 
 |---------|--------------|-------|
 | 1.0.0   | January 7, 2026 | Initial Release |
 
+## Original Source
+
+This documentation was converted from the official [Bose SoundTouch Web API PDF](soundtouch-api.pdf) (Version 1.0, effective January 7, 2026).
+
+**Original Source**: https://assets.bosecreative.com/m/496577402d128874/original/SoundTouch-Web-API.pdf
+
 ## Contributing
 
-This is official documentation from Bose Corporation. For issues or corrections, please open an issue in this repository.
+**We welcome contributions!** This is a community-maintained repository and your help is appreciated.
+
+### How to Contribute
+
+- **🐛 Found an error?** Open an issue describing the problem
+- **✅ Tested the code?** Share your results and improvements
+- **📚 Better examples?** Submit working code examples in your favorite language
+- **🌍 Translations?** Help translate the docs to other languages
+- **📖 Improvements?** Better explanations, diagrams, or formatting
+
+### Contribution Guidelines
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/your-improvement`)
+3. Make your changes
+4. Test thoroughly (especially code examples!)
+5. Commit with clear messages
+6. Open a pull request
+
+**Note**: Since the original documentation is from Bose Corporation, maintain accuracy to the official specification. Add clarifications and examples, but don't alter the core API documentation.
 
 ## Trademarks
 
